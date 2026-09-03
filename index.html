@@ -32,24 +32,7 @@
     padding: 0 0 120px;
   }
 
-  /* ── Header ── */
-  header {
-    padding: 52px 60px 36px;
-    border-bottom: 1px solid var(--rule);
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-  .site-name {
-    font-size: 15px;
-    letter-spacing: 0.01em;
-    color: var(--ink-mid);
-  }
-  .header-title {
-    font-size: 15px;
-    font-style: italic;
-    color: var(--ink-mid);
-  }
+
 
   /* ── Controls ── */
   .controls {
@@ -69,7 +52,7 @@
   input[type="text"] {
     width: 100%;
     font-family: 'EB Garamond', Georgia, serif;
-    font-size: 17px;
+    font-size: 18px;
     color: var(--ink);
     background: transparent;
     border: none;
@@ -89,7 +72,7 @@
 
   .filter-btn {
     font-family: 'EB Garamond', Georgia, serif;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--ink-mid);
     background: transparent;
     border: 1px solid var(--rule);
@@ -135,7 +118,7 @@
   /* ── Results meta ── */
   .results-meta {
     padding: 28px 60px 0;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--ink-light);
     font-style: italic;
     min-height: 28px;
@@ -153,7 +136,7 @@
 
   thead th {
     font-family: 'EB Garamond', Georgia, serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     color: var(--ink-light);
     text-align: left;
@@ -172,7 +155,7 @@
   tbody tr.hidden { display: none; }
 
   tbody td {
-    font-size: 15px;
+    font-size: 16px;
     padding: 11px 16px 11px 0;
     vertical-align: top;
     color: var(--ink);
@@ -186,11 +169,11 @@
     padding-top: 13px;
   }
 
-  .td-component { font-size: 16px; min-width: 200px; }
+  .td-component { font-size: 17px; min-width: 200px; }
   .td-component .component-name { display: block; }
   .td-component .component-notes {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--ink-light);
     font-style: italic;
     margin-top: 2px;
@@ -198,21 +181,21 @@
   }
 
   .td-cat {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--ink-mid);
     white-space: nowrap;
     width: 110px;
   }
 
   .td-price {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--ink-mid);
     white-space: nowrap;
     width: 70px;
   }
 
   .td-qty {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--ink-mid);
     white-space: nowrap;
     width: 55px;
@@ -223,7 +206,7 @@
   .assign-wrap { display: flex; flex-wrap: wrap; gap: 4px; }
 
   .assign-tag {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.04em;
     padding: 2px 7px;
     border-radius: 2px;
@@ -237,7 +220,7 @@
 
   /* ── Section headers ── */
   tr.section-row td {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.12em;
     color: var(--ink-light);
     text-transform: uppercase;
@@ -301,7 +284,7 @@
     padding: 20px 60px 0;
     display: flex;
     gap: 20px;
-    font-size: 13px;
+    font-size: 15px;
     color: var(--ink-light);
     font-style: italic;
   }
@@ -317,19 +300,19 @@
   }
   .view-tab {
     font-family: 'EB Garamond', Georgia, serif;
-    font-size: 15px;
+    font-size: 17px;
     color: var(--ink-light);
     background: transparent;
     border: none;
     border-bottom: 2px solid transparent;
-    padding: 0 0 12px;
+    padding: 0 0 14px;
     cursor: pointer;
     font-style: italic;
-    transition: all 0.15s;
+    transition: color 0.15s;
     margin-bottom: -1px;
   }
   .view-tab:hover { color: var(--ink); }
-  .view-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .view-tab.active { color: var(--ink); border-bottom-color: var(--ink); font-style: normal; }
 
   /* ── Empty state ── */
   .empty-state {
@@ -349,10 +332,7 @@
 </head>
 <body>
 
-<header>
-  <span class="site-name">Jeff Hurlow</span>
-  <span class="header-title">Studio Inventory</span>
-</header>
+
 
 <div class="view-toggle">
   <button class="view-tab active" onclick="setView('inventory')">All parts</button>
