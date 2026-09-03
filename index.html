@@ -82,7 +82,7 @@
     transition: all 0.15s;
   }
   .filter-btn:hover { border-color: var(--ink-mid); color: var(--ink); }
-  .filter-btn.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .filter-btn.active { background: transparent; color: var(--ink); border-color: var(--ink); font-style: italic; }
 
   /* ── Project view ── */
   .project-select-wrap {
@@ -104,7 +104,7 @@
   }
   .project-pill {
     font-family: 'EB Garamond', Georgia, serif;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--ink-mid);
     background: transparent;
     border: 1px solid var(--rule);
@@ -113,7 +113,7 @@
     transition: all 0.15s;
   }
   .project-pill:hover { border-color: var(--ink-mid); color: var(--ink); }
-  .project-pill.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .project-pill.active { background: transparent; color: var(--ink); border-color: var(--ink); font-style: italic; }
 
   /* ── Results meta ── */
   .results-meta {
@@ -140,11 +140,12 @@
     font-weight: 400;
     color: var(--ink-light);
     text-align: left;
-    padding: 0 16px 10px 0;
+    padding: 0 24px 10px 0;
     border-bottom: 1px solid var(--rule);
     white-space: nowrap;
     letter-spacing: 0.03em;
   }
+  thead th.th-price { text-align: right; }
   thead th:last-child { padding-right: 0; }
 
   tbody tr {
@@ -156,7 +157,7 @@
 
   tbody td {
     font-size: 16px;
-    padding: 11px 16px 11px 0;
+    padding: 11px 0 11px 0;
     vertical-align: top;
     color: var(--ink);
   }
@@ -184,21 +185,22 @@
     font-size: 15px;
     color: var(--ink-mid);
     white-space: nowrap;
-    width: 110px;
+    padding-right: 24px;
   }
 
   .td-price {
     font-size: 15px;
     color: var(--ink-mid);
     white-space: nowrap;
-    width: 70px;
+    padding-right: 24px;
+    text-align: right;
   }
 
   .td-qty {
     font-size: 15px;
     color: var(--ink-mid);
     white-space: nowrap;
-    width: 55px;
+    padding-right: 24px;
   }
 
   .td-assignments { width: 260px; }
@@ -245,6 +247,17 @@
     font-size: 14px;
     color: var(--ink-light);
     margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .build-state-badge {
+    font-size: 12px;
+    font-style: normal;
+    color: var(--ink);
+    padding: 2px 10px;
+    border-radius: 2px;
+    white-space: nowrap;
   }
 
   .project-grid {
@@ -362,10 +375,8 @@
         <tr>
           <th class="td-num">#</th>
           <th>Component</th>
-          <th>Qty</th>
           <th>Category</th>
-          <th>Price</th>
-          <th>Assigned to</th>
+          <th>Qty</th>
         </tr>
       </thead>
       <tbody id="table-body"></tbody>
@@ -393,6 +404,8 @@ const DATA = {"items": [{"type": "section", "label": "COMPUTE"}, {"type": "item"
 
 const ITEMS = DATA.items;
 const INSTALL_NAMES = DATA.install_names;
+const BUILD_STATES = {"PHO": "Built", "PHI": "Planning", "DRV": "Built", "QRK": "Built", "TYP": "Built", "DRK": "Built", "CLO": "Parts sourcing", "MKY": "Planning", "R40": "Planning", "DCT": "Planning", "THR": "Planning", "RRL": "Planning", "CSH": "Planning", "S8": "Planning", "VNT": "Planning", "CLK": "Parts sourcing", "ANS": "Planning", "PHO2": "Parts sourcing", "MDV": "Planning"};
+const STATE_COLORS = {"Planning": "#F0F0F0", "Parts sourcing": "#FFF3CD", "Building": "#DBEAFE", "Built": "#dff0df", "Exhibited": "#E8D5F5"};
 
 let activeCategory = 'All';
 let activeProject = null;
@@ -436,7 +449,7 @@ ITEMS.forEach((item, idx) => {
   if (item.type === 'section') {
     tr.className = 'section-row';
     tr.dataset.section = item.label;
-    tr.innerHTML = `<td colspan="5">${item.label}</td>`;
+    tr.innerHTML = `<td colspan="3">${item.label}</td>`;
   } else {
     tr.dataset.component = item.component.toLowerCase();
     tr.dataset.category = item.category;
@@ -465,9 +478,7 @@ ITEMS.forEach((item, idx) => {
         ${item.notes ? `<span class="component-notes">${item.notes}</span>` : ''}
       </td>
       <td class="td-cat">${item.category}</td>
-      <td class="td-price">${priceStr}</td>
       <td class="td-qty">${item.qty > 1 || item.qty_unit !== 'unit' ? item.qty + ' ' + item.qty_unit : '1'}</td>
-      <td class="td-assignments"><div class="assign-wrap">${assignHTML}</div></td>
     `;
   }
   tbody.appendChild(tr);
@@ -522,23 +533,28 @@ function showProjectPanel(code) {
   const assigned = ITEMS.filter(i => i.type === 'item' && i.assignments[code]);
   const inHand = assigned.filter(i => i.assignments[code] === 'in_hand' || i.assignments[code] === 'complete');
   const toOrder = assigned.filter(i => i.assignments[code] === 'to_order');
+  const buildState = BUILD_STATES[code] || 'Planning';
+  const stateColor = STATE_COLORS[buildState] || '#F0F0F0';
 
-  document.getElementById('panel-sub').textContent =
-    `${assigned.length} parts — ${inHand.length} in hand, ${toOrder.length} to order`;
+  // Sub line: parts summary + build state badge
+  const subEl = document.getElementById('panel-sub');
+  subEl.innerHTML = `${assigned.length} parts — ${inHand.length} in hand, ${toOrder.length} to order
+    <span class="build-state-badge" style="background:${stateColor}">${buildState}</span>`;
 
   const grid = document.getElementById('panel-grid');
   grid.innerHTML = '';
 
   assigned.forEach(item => {
     const status = item.assignments[code];
-    const statusLabel = status === 'in_hand' ? 'In hand' : status === 'to_order' ? 'To order' : 'Build complete';
+    const dotClass = status === 'to_order' ? 'dot-to_order' : 'dot-in_hand';
+    const statusLabel = status === 'to_order' ? 'To order' : 'In hand';
     const div = document.createElement('div');
     div.className = 'project-item';
     div.innerHTML = `
       <div class="project-item-name">${item.component}</div>
-      <div class="project-item-meta">${item.category}${item.price ? ' · $' + parseFloat(item.price).toFixed(2) : ''}</div>
+      <div class="project-item-meta">${item.category}</div>
       <div class="project-item-status">
-        <span class="status-dot dot-${status}"></span>${statusLabel}
+        <span class="status-dot ${dotClass}"></span>${statusLabel}
       </div>
     `;
     grid.appendChild(div);
