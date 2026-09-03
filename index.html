@@ -404,8 +404,8 @@ const DATA = {"items": [{"type": "section", "label": "COMPUTE"}, {"type": "item"
 
 const ITEMS = DATA.items;
 const INSTALL_NAMES = DATA.install_names;
-const BUILD_STATES = {"PHO": "Built", "PHI": "Planning", "DRV": "Built", "QRK": "Built", "TYP": "Built", "DRK": "Built", "CLO": "Parts sourcing", "MKY": "Planning", "R40": "Planning", "DCT": "Planning", "THR": "Planning", "RRL": "Planning", "CSH": "Planning", "S8": "Planning", "VNT": "Planning", "CLK": "Parts sourcing", "ANS": "Planning", "PHO2": "Parts sourcing", "MDV": "Planning"};
-const STATE_COLORS = {"Planning": "#F0F0F0", "Parts sourcing": "#FFF3CD", "Building": "#DBEAFE", "Built": "#dff0df", "Exhibited": "#E8D5F5"};
+const BUILD_STATES = {"PHO": "Exhibited", "PHI": "On hold", "DRV": "Built", "QRK": "On hold", "TYP": "Building", "DRK": "Built", "CLO": "Building", "MKY": "On hold", "R40": "On hold", "DCT": "On hold", "THR": "On hold", "RRL": "On hold", "CSH": "On hold", "S8": "Planning", "VNT": "Planning", "CLK": "Planning", "ANS": "Planning", "PHO2": "On hold", "MDV": "Planning"};
+const STATE_COLORS = {"Planning": "#F0F0F0", "Parts sourcing": "#FFF3CD", "Building": "#DBEAFE", "Built": "#dff0df", "Exhibited": "#E8D5F5", "On hold": "#EBEBEB"};
 
 let activeCategory = 'All';
 let activeProject = null;
