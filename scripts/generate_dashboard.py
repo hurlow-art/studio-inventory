@@ -130,7 +130,7 @@ def read_parts(service):
     # Find install columns (cols with 3-4 char codes after col F)
     install_cols = {}  # col_index -> code
     for i, val in enumerate(header_values):
-        if i >= 6 and val and len(val.strip()) <= 5 and val.strip().isupper():
+        if i >= 7 and val and len(val.strip()) <= 5 and val.strip().isupper():
             install_cols[i] = val.strip()
 
     print(f"Install columns found: {install_cols}")
@@ -169,7 +169,8 @@ def read_parts(service):
         cat    = row_vals[2].strip()  if len(row_vals) > 2 else ""
         source = row_vals[3].strip()  if len(row_vals) > 3 else ""
         price  = row_vals[4].strip()  if len(row_vals) > 4 else ""
-        notes  = row_vals[25].strip() if len(row_vals) > 25 else ""
+        img_url = row_vals[6].strip()  if len(row_vals) > 6  else ""
+        notes  = row_vals[26].strip() if len(row_vals) > 26 else ""
 
         # Parse quantity from component name
         qty, qty_unit = parse_qty(comp)
@@ -197,6 +198,7 @@ def read_parts(service):
             "qty_unit":    qty_unit,
             "assignments": assignments,
             "notes":       notes,
+            "img_url":     img_url,
         })
 
     return items, list(install_cols.values())
@@ -316,9 +318,13 @@ def build_html(items, build_states):
   tbody tr {{ border-bottom: 1px solid var(--rule); transition: background 0.1s; }}
   tbody tr:hover {{ background: rgba(0,0,0,0.025); }}
   tbody tr.hidden {{ display: none; }}
-  tbody td {{ font-size: 16px; padding: 11px 0; vertical-align: top; color: var(--ink); }}
-  .td-num {{ color: var(--ink-light); font-size: 13px; width: 32px; padding-top: 13px; }}
-  .td-component {{ font-size: 17px; min-width: 200px; }}
+  tbody td {{ font-size: 16px; padding: 11px 0; vertical-align: middle; color: var(--ink); }}
+  .td-thumb {{ width: 96px; min-width: 96px; padding-right: 16px; vertical-align: middle; }}
+  .thumb-img {{ width: 96px; height: 96px; object-fit: cover; display: block;
+    border-radius: 2px; background: #EBEBEB; }}
+  .thumb-placeholder {{ width: 96px; height: 96px; background: #EBEBEB;
+    border-radius: 2px; display: block; }}
+  .td-component {{ font-size: 17px; min-width: 200px; vertical-align: middle; }}
   .td-component .component-name {{ display: block; }}
   .td-component .component-notes {{ display: block; font-size: 14px;
     color: var(--ink-light); font-style: italic; margin-top: 2px; line-height: 1.4; }}
@@ -360,6 +366,8 @@ def build_html(items, build_states):
     .results-meta, .legend, .project-panel {{ padding-left: 24px; padding-right: 24px; }}
     .project-grid {{ grid-template-columns: 1fr; }}
     .td-cat, .td-qty {{ display: none; }}
+    .td-thumb {{ width: 64px; min-width: 64px; }}
+    .thumb-img, .thumb-placeholder {{ width: 64px; height: 64px; }}
   }}
 </style>
 </head>
@@ -387,7 +395,7 @@ def build_html(items, build_states):
     <table id="parts-table">
       <thead>
         <tr>
-          <th class="td-num">#</th>
+          <th class="td-thumb"></th>
           <th>Component</th>
           <th>Category</th>
           <th>Qty</th>
@@ -461,8 +469,11 @@ ITEMS.forEach(item => {{
     tr.dataset.category  = item.category;
     tr.dataset.notes     = item.notes.toLowerCase();
     const qtyStr = item.qty > 1 || item.qty_unit !== 'unit' ? `${{item.qty}}\u00a0${{item.qty_unit}}` : '1';
+    const thumbHTML = item.img_url
+      ? `<img src="${{item.img_url}}" alt="${{item.component}}" class="thumb-img">`
+      : `<div class="thumb-placeholder"></div>`;
     tr.innerHTML = `
-      <td class="td-num">${{item.num}}</td>
+      <td class="td-thumb">${{thumbHTML}}</td>
       <td class="td-component">
         <span class="component-name">${{item.component}}</span>
         ${{item.notes ? `<span class="component-notes">${{item.notes}}</span>` : ''}}
