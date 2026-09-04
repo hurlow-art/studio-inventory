@@ -407,6 +407,14 @@ def build_html(items, build_states):
   </div>
 </div>
 
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox()" style="display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.85); z-index:1000; cursor:pointer;
+  align-items:center; justify-content:center;">
+  <img id="lightbox-img" src="" alt="" style="max-width:90vw; max-height:90vh;
+    object-fit:contain; border-radius:2px;">
+</div>
+
 <div id="project-view" style="display:none;">
   <div class="project-select-wrap">
     <span class="project-label">Select a piece \u2014</span>
@@ -470,7 +478,7 @@ ITEMS.forEach(item => {{
     tr.dataset.notes     = item.notes.toLowerCase();
     const qtyStr = item.qty > 1 || item.qty_unit !== 'unit' ? `${{item.qty}}\u00a0${{item.qty_unit}}` : '1';
     const thumbHTML = item.img_url
-      ? `<img src="${{item.img_url}}" alt="${{item.component}}" class="thumb-img">`
+      ? `<img src="${{item.img_url}}" alt="${{item.component}}" class="thumb-img" onclick="openLightbox('${{item.img_url}}', '${{item.component}}')" style="cursor:zoom-in;">`
       : `<div class="thumb-placeholder"></div>`;
     tr.innerHTML = `
       <td class="td-thumb">${{thumbHTML}}</td>
@@ -484,6 +492,23 @@ ITEMS.forEach(item => {{
   }}
   tbody.appendChild(tr);
 }});
+
+function openLightbox(src, alt) {{
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = src;
+  img.alt = alt;
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}}
+
+function closeLightbox() {{
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}}
+
+// Close on Escape key
+document.addEventListener('keydown', e => {{ if (e.key === 'Escape') closeLightbox(); }});
 
 function filterTable() {{
   const q = document.getElementById('search').value.toLowerCase().trim();
