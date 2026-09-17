@@ -218,8 +218,9 @@ INVENTORY.forEach(item => {
     const thumb = item.img_url
       ? `<img src="${item.img_url}" class="thumb-img" onclick="openLightbox('${item.img_url}','${item.component}')">`
       : `<div class="thumb-placeholder"></div>`;
-    const compName = item.link
-      ? `<a href="${item.link}" target="_blank" class="component-link">${item.component}</a>`
+    const rawLink = item.link && !item.link.startsWith('http') ? 'https://' + item.link : item.link;
+    const compName = rawLink
+      ? `<a href="${rawLink}" target="_blank" class="component-link">${item.component}</a>`
       : `<span class="component-name">${item.component}</span>`;
     tr.innerHTML = `
       <td class="td-thumb">${thumb}</td>
