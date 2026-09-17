@@ -55,7 +55,7 @@ def get_values(service, range_name):
 
 
 def read_inventory(service):
-    rows = get_values(service, "Inventory!A3:G300")
+    rows = get_values(service, "Inventory!A3:H300")
     items = []
     for row in rows:
         if not row:
@@ -71,7 +71,8 @@ def read_inventory(service):
         link    = row[3].strip() if len(row) > 3 else ""
         img_url = row[4].strip() if len(row) > 4 else ""
         qty_raw = row[5].strip() if len(row) > 5 else "1"
-        notes   = row[6].strip() if len(row) > 6 else ""
+        notes        = row[6].strip() if len(row) > 6 else ""
+        storage_loc  = row[7].strip() if len(row) > 7 else ""
         try:
             qty = int(float(qty_raw)) if qty_raw and qty_raw not in ("", "—") else 1
         except ValueError:
@@ -205,6 +206,7 @@ def build_html(inventory, allocations, projects):
     font-style: italic; margin-top: 2px; line-height: 1.4; }}
   .td-cat {{ font-size: 15px; color: var(--ink-mid); white-space: nowrap; padding-right: 24px; }}
   .td-qty {{ font-size: 15px; color: var(--ink-mid); white-space: nowrap; padding-right: 24px; }}
+  .td-drawer {{ font-size: 14px; color: var(--ink-light); white-space: nowrap; text-align: center; width: 60px; }}
   tr.section-row td {{ font-size: 12px; letter-spacing: 0.12em; color: var(--ink-light);
     text-transform: uppercase; padding: 28px 0 8px; border-bottom: none; }}
   tr.section-row:hover {{ background: transparent; }}
@@ -250,7 +252,7 @@ def build_html(inventory, allocations, projects):
   @media (max-width: 768px) {{
     .view-toggle, .controls, .project-select-wrap, .table-wrap,
     .results-meta, .project-panel {{ padding-left: 24px; padding-right: 24px; }}
-    .td-cat, .td-qty {{ display: none; }}
+    .td-cat, .td-qty, .td-drawer {{ display: none; }}
     .td-thumb {{ width: 64px; min-width: 64px; }}
     .thumb-img, .thumb-placeholder {{ width: 64px; height: 64px; }}
   }}
@@ -283,6 +285,7 @@ def build_html(inventory, allocations, projects):
         <th>Component</th>
         <th>Category</th>
         <th>Qty</th>
+        <th>Drawer</th>
       </tr></thead>
       <tbody id="table-body"></tbody>
     </table>
@@ -351,7 +354,7 @@ INVENTORY.forEach(item => {{
   const tr = document.createElement('tr');
   if (item.type === 'section') {{
     tr.className = 'section-row';
-    tr.innerHTML = `<td colspan="4">${{item.label}}</td>`;
+    tr.innerHTML = `<td colspan="5">${{item.label}}</td>`;
   }} else {{
     tr.dataset.component = item.component.toLowerCase();
     tr.dataset.category  = item.category;
@@ -366,7 +369,8 @@ INVENTORY.forEach(item => {{
         ${{item.notes?`<span class="component-notes">${{item.notes}}</span>`:''}}
       </td>
       <td class="td-cat">${{item.category}}</td>
-      <td class="td-qty">${{item.qty}}</td>`;
+      <td class="td-qty">${{item.qty}}</td>
+      <td class="td-drawer">${{item.storage_loc || '—'}}</td>`;
   }}
   tbody.appendChild(tr);
 }});
