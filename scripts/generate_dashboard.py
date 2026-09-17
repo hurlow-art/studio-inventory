@@ -82,9 +82,8 @@ def read_inventory(service):
             "source": source, "link": link, "img_url": img_url,
             "qty": qty, "notes": notes,
             "storage_loc": storage_loc,
-        })    
-        
-print(f"  Inventory: {len([i for i in items if i['type']=='item'])} parts, "
+        })
+    print(f"  Inventory: {len([i for i in items if i['type']=='item'])} parts, "
           f"{len([i for i in items if i['type']=='section'])} sections")
     return items
 
