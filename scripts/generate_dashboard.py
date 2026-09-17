@@ -203,6 +203,9 @@ def build_html(inventory, allocations, projects):
     border-radius: 2px; display: block; }}
   .td-component {{ font-size: 17px; min-width: 200px; }}
   .component-name {{ display: block; }}
+  .component-link {{ display: block; color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--rule); }}
+  .component-link:hover {{ border-bottom-color: var(--ink); }}
   .component-notes {{ display: block; font-size: 14px; color: var(--ink-light);
     font-style: italic; margin-top: 2px; line-height: 1.4; }}
   .td-cat {{ font-size: 15px; color: var(--ink-mid); white-space: nowrap; padding-right: 24px; }}
@@ -363,10 +366,13 @@ INVENTORY.forEach(item => {{
     const thumb = item.img_url
       ? `<img src="${{item.img_url}}" class="thumb-img" onclick="openLightbox('${{item.img_url}}','${{item.component}}')">`
       : `<div class="thumb-placeholder"></div>`;
+    const compName = item.link
+      ? `<a href="${{item.link}}" target="_blank" class="component-link">${{item.component}}</a>`
+      : `<span class="component-name">${{item.component}}</span>`;
     tr.innerHTML = `
       <td class="td-thumb">${{thumb}}</td>
       <td class="td-component">
-        <span class="component-name">${{item.component}}</span>
+        ${{compName}}
         ${{item.notes?`<span class="component-notes">${{item.notes}}</span>`:''}}
       </td>
       <td class="td-cat">${{item.category}}</td>
